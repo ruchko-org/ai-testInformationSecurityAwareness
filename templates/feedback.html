@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block title %}Разбор ответа{% endblock %}
+
+{% block content %}
+<div class="progress-wrap">
+    <div class="progress-meta">
+        <span>Вопрос {{ progress.number }} из {{ progress.total }}</span>
+        <span>{{ progress.percent }}%</span>
+    </div>
+    <div class="progress-bar">
+        <div class="progress-fill" style="width: {{ progress.percent }}%"></div>
+    </div>
+</div>
+
+<section class="quiz-card">
+    <span class="category-badge">{{ question.category }}</span>
+    <h2 class="question-text">{{ question.question }}</h2>
+
+    <div class="verdict {{ 'verdict-right' if is_right else 'verdict-wrong' }}">
+        {% if is_right %}
+            ✅ Верно! Отличная работа.
+        {% else %}
+            ❌ Неверно. Разберёмся, почему.
+        {% endif %}
+    </div>
+
+    <div class="explanation-block">
+        <h3>Объяснение</h3>
+        <p>{{ question.explanation }}</p>
+    </div>
+
+    <div class="options-review">
+        <h3>Разбор твоего ответа</h3>
+        <ol class="review-list">
+            <li class="review-item is-chosen {{ 'is-correct' if chosen == question.correct else '' }}">
+                <div class="review-head">
+                    <span class="option-letter">{{ ['A', 'B', 'C', 'D'][chosen] }}</span>
+                    <span class="review-text">{{ question.options[chosen] }}</span>
+                    <span class="tag tag-chosen">твой выбор</span>
+                    {% if chosen == question.correct %}<span class="tag tag-correct">правильный</span>{% endif %}
+                </div>
+                <p class="review-explain">{{ question.option_explanations[chosen] }}</p>
+            </li>
+        </ol>
+    </div>
+
+    <form action="{{ url_for('next_question') }}" method="post">
+        <button type="submit" class="btn btn-primary">
+            {% if is_last %}Показать результат{% else %}Следующий вопрос{% endif %}
+        </button>
+    </form>
+</section>
+{% endblock %}

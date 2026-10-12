@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% block title %}Результат квиза{% endblock %}
+
+{% block content %}
+<section class="quiz-card result-card">
+    <h1>🏁 Квиз завершён!</h1>
+
+    <div class="score-circle {{ 'score-good' if percent >= 80 else ('score-mid' if percent >= 50 else 'score-low') }}">
+        <span class="score-percent">{{ percent }}%</span>
+        <span class="score-sub">{{ correct_count }} из {{ total }}</span>
+    </div>
+
+    <p class="result-message">
+        {% if percent >= 80 %}
+            Отличный результат! Ты хорошо разбираешься в информационной безопасности. 🛡️
+        {% elif percent >= 50 %}
+            Неплохо, но есть над чем поработать. Посмотри разбор ошибок ниже. 💪
+        {% else %}
+            Стоит повторить основы безопасности. Разбор ошибок поможет разобраться. 📚
+        {% endif %}
+    </p>
+
+    <form action="{{ url_for('start') }}" method="post">
+        <button type="submit" class="btn btn-primary">Пройти ещё раз</button>
+    </form>
+
+    {% if mistakes %}
+    <div class="mistakes-block">
+        <h2>Разбор ошибок ({{ mistakes|length }})</h2>
+        <ol class="review-list">
+            {% for m in mistakes %}
+            <li class="review-item">
+                <span class="category-badge">{{ m.question.category }}</span>
+                <h3 class="question-text">{{ m.question.question }}</h3>
+
+                <div class="mistake-answer mistake-wrong">
+                    <strong>Твой ответ:</strong> {{ m.chosen_text }}
+                </div>
+
+                <div class="explanation-block">
+                    <p>{{ m.question.explanation }}</p>
+                </div>
+
+                <details class="review-details" open>
+                    <summary>Разбор твоего ответа</summary>
+                    <ol class="review-list">
+                        <li class="review-item is-chosen">
+                            <div class="review-head">
+                                <span class="option-letter">{{ ['A', 'B', 'C', 'D'][m.chosen] }}</span>
+                                <span class="review-text">{{ m.chosen_text }}</span>
+                                <span class="tag tag-chosen">твой выбор</span>
+                            </div>
+                            <p class="review-explain">{{ m.question.option_explanations[m.chosen] }}</p>
+                        </li>
+                    </ol>
+                </details>
+            </li>
+            {% endfor %}
+        </ol>
+    </div>
+    {% else %}
+    <p class="perfect-result">🎉 Ни одной ошибки — безупречно!</p>
+    {% endif %}
+
+    <form action="{{ url_for('restart') }}" method="post" class="restart-form">
+        <button type="submit" class="btn btn-secondary">Вернуться на главную</button>
+    </form>
+</section>
+{% endblock %}

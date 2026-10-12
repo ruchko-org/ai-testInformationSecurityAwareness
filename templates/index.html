@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}CyberSafe Quiz — начни проверку{% endblock %}
+
+{% block content %}
+<section class="hero">
+    <h1>Проверь, насколько ты защищён в сети 🛡️</h1>
+    <p class="lead">
+        Это игровой квиз про информационную безопасность. Ты пройдёшь реальные ситуации,
+        с которыми сталкиваются школьники: фишинговые письма, подозрительные ссылки,
+        утечки паролей, взломы аккаунтов и социальную инженерию.
+    </p>
+
+    <div class="cards">
+        <div class="card">
+            <span class="card-icon">🎯</span>
+            <h3>{{ session_size }} вопросов</h3>
+            <p>Случайная выборка из банка в {{ total_questions }} заданий.</p>
+        </div>
+        <div class="card">
+            <span class="card-icon">💡</span>
+            <h3>Разбор каждого ответа</h3>
+            <p>После каждого вопроса — объяснение, почему вариант верный или нет.</p>
+        </div>
+        <div class="card">
+            <span class="card-icon">🏁</span>
+            <h3>Итоговый результат</h3>
+            <p>Процент правильных ответов и разбор всех ошибок в конце.</p>
+        </div>
+    </div>
+
+    <form action="{{ url_for('start') }}" method="post">
+        <button type="submit" class="btn btn-primary btn-large">Начать квиз</button>
+    </form>
+</section>
+{% endblock %}
